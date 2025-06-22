@@ -18,9 +18,16 @@ interface Task {
 export class HomePage {
   newTask: string = '';
   tasks: Task[] = [
-    { title: 'Estudar Angular', done: false },
-    { title: 'Criar layout no Ionic', done: false },
-    { title: 'Testar app no celular', done: false }
+    { title: 'Arroz', done: false },
+    { title: 'Feijão', done: false },
+    { title: 'Óleo de Soja', done: false },
+    { title: 'Açúcar', done: false },
+    { title: 'Café', done: false },
+    { title: 'Leite', done: false },
+    { title: 'Pão', done: false },
+    { title: 'Ovos', done: false },
+    { title: 'Macarrão', done: false },
+    { title: 'Carnes', done: false }
   ];
 
   constructor(private alertController: AlertController) {}
