@@ -1,4 +1,4 @@
-# Todo App - Angular + Ionic
+# Smart Market AI - Angular + Ionic
 
 Este projeto é um aplicativo de tarefas (Todo) desenvolvido com Angular e Ionic, inspirado em um design mobile do Figma.
 

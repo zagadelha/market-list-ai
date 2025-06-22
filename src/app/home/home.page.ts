@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicModule } from '@ionic/angular';
+import { IonicModule, AlertController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -23,7 +23,7 @@ export class HomePage {
     { title: 'Testar app no celular', done: false }
   ];
 
-  constructor() {}
+  constructor(private alertController: AlertController) {}
 
   addTask() {
     const title = this.newTask.trim();
@@ -33,7 +33,24 @@ export class HomePage {
     }
   }
 
-  removeTask(index: number) {
-    this.tasks.splice(index, 1);
+  async removeTask(index: number) {
+    const alert = await this.alertController.create({
+      header: 'Confirmação',
+      message: 'Tem certeza que deseja excluir esta tarefa?',
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel',
+        },
+        {
+          text: 'Excluir',
+          role: 'destructive',
+          handler: () => {
+            this.tasks.splice(index, 1);
+          },
+        },
+      ],
+    });
+    await alert.present();
   }
 }

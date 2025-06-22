@@ -2,14 +2,15 @@
   <ion-toolbar color="primary">
     <ion-menu-button slot="start"></ion-menu-button>
     <ion-title>
-      Todo App
+      Smart Market AI
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true" class="ion-padding">
   <div class="todo-header">
-    <h2>Minhas Tarefas</h2>
+    <img src="assets/icon/market.png" alt="Supermercado" style="width: 56px; height: 56px; display: block; margin: 0 auto 12px auto;" />
+    <!-- <h2>Minhas Tarefas</h2> -->
     <ion-item lines="none" class="todo-input">
       <ion-input placeholder="Adicionar nova tarefa..." [(ngModel)]="newTask" (keyup.enter)="addTask()"></ion-input>
       <ion-button fill="solid" color="primary" (click)="addTask()">
