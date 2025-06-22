@@ -60,4 +60,14 @@ export class HomePage {
     });
     await alert.present();
   }
+
+  reorderTasks(event: CustomEvent) {
+    const from = event.detail.from;
+    const to = event.detail.to;
+    if (from !== to) {
+      const moved = this.tasks.splice(from, 1)[0];
+      this.tasks.splice(to, 0, moved);
+    }
+    event.detail.complete();
+  }
 }

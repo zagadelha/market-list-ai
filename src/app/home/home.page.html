@@ -19,13 +19,14 @@
     </ion-item>
   </div>
 
-  <ion-list class="todo-list">
+  <ion-reorder-group (ionItemReorder)="reorderTasks($event)" disabled="false" class="todo-list">
     <ion-item *ngFor="let task of tasks; let i = index" [ngClass]="{'done': task.done}">
       <ion-checkbox slot="start" [(ngModel)]="task.done"></ion-checkbox>
       <ion-label>{{ task.title }}</ion-label>
       <ion-button fill="clear" color="danger" slot="end" (click)="removeTask(i)">
         <ion-icon name="trash-outline"></ion-icon>
       </ion-button>
+      <ion-reorder slot="end"></ion-reorder>
     </ion-item>
-  </ion-list>
+  </ion-reorder-group>
 </ion-content>
