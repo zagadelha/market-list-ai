@@ -28,7 +28,7 @@ if exist gradlew (
   )
   echo APK gerado em android\app\build\outputs\apk\debug\app-debug.apk
 ) else (
-  echo gradlew não encontrado. Execute manualmente pelo Android Studio se necessário.
+  echo gradlew nao encontrado. Execute manualmente pelo Android Studio se necessário.
 )
 cd ..
 
