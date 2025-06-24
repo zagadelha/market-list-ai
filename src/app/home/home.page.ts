@@ -71,6 +71,23 @@ export class HomePage {
     event.detail.complete();
   }
 
+  onToggleTask(task: Task, index: number) {
+    // Alterna o status
+    //if (task.done)     
+    //  task.done = !task.done;
+    //else
+    //  task.done = task.done;
+
+    // Remove da posição atual
+    this.tasks.splice(index, 1);
+    // Se marcado como feito, vai para o fim; se desmarcado, volta para o início
+    if (task.done) {
+      this.tasks.push(task);
+    } else {
+      this.tasks.unshift(task);
+    }
+  }
+
   get totalTasks(): number {
     return this.tasks.length;
   }
