@@ -10,13 +10,33 @@
 <ion-content [fullscreen]="true" class="ion-padding">
   <div class="todo-header">
     <img src="assets/icon/market.png" alt="Supermercado" style="width: 56px; height: 56px; display: block; margin: 0 auto 12px auto;" />
-    <!-- <h2>Minhas Tarefas</h2> -->
     <ion-item lines="none" class="todo-input">
       <ion-input placeholder="Adicionar item..." [(ngModel)]="newTask" (keyup.enter)="addTask()"></ion-input>
       <ion-button fill="solid" color="primary" (click)="addTask()">
         <ion-icon name="add-outline"></ion-icon>
       </ion-button>
     </ion-item>
+  </div>
+
+  <!-- Acima da lista -->
+  <div class="totalizador" style="margin: 16px 0 8px 0;">
+    <ion-row>
+      <ion-col size="auto">
+        <ion-chip color="primary">
+          <ion-label>Total: {{ totalTasks }}</ion-label>
+        </ion-chip>
+      </ion-col>
+      <ion-col size="auto">
+        <ion-chip color="warning">
+          <ion-label>Comprar: {{ toBuyCount }}</ion-label>
+        </ion-chip>
+      </ion-col>
+      <ion-col size="auto">
+        <ion-chip color="success">
+          <ion-label>Comprados: {{ boughtCount }}</ion-label>
+        </ion-chip>
+      </ion-col>
+    </ion-row>
   </div>
 
   <ion-reorder-group (ionItemReorder)="reorderTasks($event)" disabled="false" class="todo-list">

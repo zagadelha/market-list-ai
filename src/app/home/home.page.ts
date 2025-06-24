@@ -70,4 +70,16 @@ export class HomePage {
     }
     event.detail.complete();
   }
+
+  get totalTasks(): number {
+    return this.tasks.length;
+  }
+
+  get toBuyCount(): number {
+    return this.tasks.filter(t => !t.done).length;
+  }
+
+  get boughtCount(): number {
+    return this.tasks.filter(t => t.done).length;
+  }
 }
