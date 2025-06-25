@@ -1,0 +1,56 @@
+<ion-content class="ion-padding auth-content">
+  <div class="auth-card">
+    <img src="assets/icon/market.png" alt="Market List AI" class="logo" />
+    <h2>Market List AI</h2>
+    
+    <form (ngSubmit)="signIn()">
+      <ion-item>
+        <ion-label position="floating">E-mail</ion-label>
+        <ion-input
+          type="email"
+          [(ngModel)]="email"
+          name="email"
+          required
+          autocomplete="email"
+        ></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Senha</ion-label>
+        <ion-input
+          type="password"
+          [(ngModel)]="password"
+          name="password"
+          required
+          autocomplete="current-password"
+        ></ion-input>      </ion-item>
+
+      <div class="ion-text-right">
+        <ion-button fill="clear" size="small" (click)="forgotPassword()">
+          Esqueceu a senha?
+        </ion-button>
+      </div>
+
+      <div class="ion-margin-top">
+        <ion-button expand="block" type="submit" [disabled]="loading">
+          <ion-icon name="log-in-outline" slot="start"></ion-icon>
+          Entrar
+        </ion-button>
+      </div>
+    </form>
+
+    <ion-button expand="block" fill="outline" (click)="signUp()" [disabled]="loading" class="ion-margin-top">
+      <ion-icon name="person-add-outline" slot="start"></ion-icon>
+      Criar Conta
+    </ion-button>
+
+    <div class="divider">
+      <span>ou</span>
+    </div>
+
+    <ion-button expand="block" color="danger" (click)="signInWithGoogle()" [disabled]="loading">
+      <ion-icon name="logo-google" slot="start"></ion-icon>
+      Entrar com Google
+    </ion-button>
+  </div>
+</ion-content>

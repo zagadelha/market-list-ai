@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { IonicModule, AlertController } from '@ionic/angular';
+import { IonicModule, AlertController, MenuController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { supabase } from '../supabase.client';
+import { Router } from '@angular/router';
 
 interface Item {
   id: string;
@@ -22,7 +23,21 @@ export class HomePage {
   newTask: string = '';
   tasks: Item[] = [];
 
-  constructor(private alertController: AlertController) {}
+  constructor(
+    private alertController: AlertController,
+    private router: Router,
+    private menuCtrl: MenuController
+  ) {}
+
+  async ngOnInit() {
+    await this.menuCtrl.enable(true);
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
+      this.router.navigate(['/auth']);
+      return;
+    }
+    await this.loadTasks();
+  }
 
   /** 
   addTask() {
@@ -97,10 +112,6 @@ export class HomePage {
 
 
   //------------------------
-
-  async ngOnInit() {
-    await this.loadTasks();
-  }
 
   async loadTasks() {
     try {
