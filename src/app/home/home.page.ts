@@ -138,8 +138,15 @@ export class HomePage {
   async onToggleTask(task: Item, index: number) {
     if (!task.id) return;
     // Alterna o status localmente
-    const updatedDone = !task.done;
+    const updatedDone = task.done;
     this.tasks[index].done = updatedDone;
+    /**
+    const updatedDone = task.done ? false : true;
+    if (task.done) 
+      this.tasks[index].done = updatedDone;
+    else
+      this.tasks[index].done = updatedDone;
+     */
     // Move para o fim/início conforme status
     const moved = this.tasks.splice(index, 1)[0];
     if (updatedDone) {
