@@ -2,9 +2,12 @@ import { Component } from '@angular/core';
 import { IonicModule, AlertController } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { supabase } from '../supabase.client';
 
-interface Task {
+interface Item {
+  id: string;
   title: string;
+  //created_at?: string;
   done: boolean;
 }
 
@@ -17,21 +20,11 @@ interface Task {
 })
 export class HomePage {
   newTask: string = '';
-  tasks: Task[] = [
-    { title: 'Arroz', done: false },
-    { title: 'Feijão', done: false },
-    { title: 'Óleo de Soja', done: false },
-    { title: 'Açúcar', done: false },
-    { title: 'Café', done: false },
-    { title: 'Leite', done: false },
-    { title: 'Pão', done: false },
-    { title: 'Ovos', done: false },
-    { title: 'Macarrão', done: false },
-    { title: 'Carnes', done: false }
-  ];
+  tasks: Item[] = [];
 
   constructor(private alertController: AlertController) {}
 
+  /** 
   addTask() {
     const title = this.newTask.trim();
     if (title) {
@@ -39,6 +32,7 @@ export class HomePage {
       this.newTask = '';
     }
   }
+    
 
   async removeTask(index: number) {
     const alert = await this.alertController.create({
@@ -59,7 +53,7 @@ export class HomePage {
       ],
     });
     await alert.present();
-  }
+  }*/
 
   reorderTasks(event: CustomEvent) {
     const from = event.detail.from;
@@ -71,6 +65,7 @@ export class HomePage {
     event.detail.complete();
   }
 
+  /**
   onToggleTask(task: Task, index: number) {
     // Alterna o status
     //if (task.done)     
@@ -86,7 +81,7 @@ export class HomePage {
     } else {
       this.tasks.unshift(task);
     }
-  }
+  } */
 
   get totalTasks(): number {
     return this.tasks.length;
@@ -99,4 +94,79 @@ export class HomePage {
   get boughtCount(): number {
     return this.tasks.filter(t => t.done).length;
   }
+
+
+  //------------------------
+
+  async ngOnInit() {
+    await this.loadTasks();
+  }
+
+  async loadTasks() {
+    try {
+      const { data, error } = await supabase.from('items').select('*').order('done').order('title');
+      if (error) {
+        console.error('Erro ao carregar itens:', error.message);
+        this.tasks = [];
+      } else {
+        this.tasks = data || [];
+      }
+    } catch (e) {
+      console.error('Erro inesperado ao carregar itens:', e);
+      this.tasks = [];
+    }
+  }
+
+  async addTask() {
+    const title = this.newTask.trim();
+    if (!title) return;
+    try {
+      const { data, error } = await supabase.from('items').insert([{ title, done: false }]).select();
+      if (error) {
+        console.error('Erro ao adicionar item:', error.message);
+        return;
+      }
+      if (data && data[0]) {
+        this.tasks.unshift(data[0]);
+        this.newTask = '';
+      }
+    } catch (e) {
+      console.error('Erro inesperado ao adicionar item:', e);
+    }
+  }
+
+  async onToggleTask(task: Item, index: number) {
+    if (!task.id) return;
+    // Alterna o status localmente
+    const updatedDone = !task.done;
+    this.tasks[index].done = updatedDone;
+    // Move para o fim/início conforme status
+    const moved = this.tasks.splice(index, 1)[0];
+    if (updatedDone) {
+      this.tasks.push(moved);
+    } else {
+      this.tasks.unshift(moved);
+    }
+    // Salva no Supabase de forma assíncrona (não bloqueia a UI)
+    supabase.from('items')
+      .update({ done: updatedDone })
+      .eq('id', task.id)
+      .then(({ error }) => {
+        if (error) {
+          console.error('Erro ao atualizar item:', error.message);
+        }
+      });
+  }
+
+  async removeTask(index: number) {
+    const task = this.tasks[index];
+    if (!task.id) return;
+    const { error } = await supabase.from('items').delete().eq('id', task.id);
+    if (!error) {
+      this.tasks.splice(index, 1);
+    }
+  }
+
+  //-------------------------
+  
 }
