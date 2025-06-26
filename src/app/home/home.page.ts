@@ -131,8 +131,11 @@ export class HomePage {
   async addTask() {
     const title = this.newTask.trim();
     if (!title) return;
+    const now = new Date().toISOString();
     try {
-      const { data, error } = await supabase.from('items').insert([{ title, done: false }]).select();
+      const { data, error } = await supabase.from('items').insert([
+        { title, done: false, datas_inclusao: [now] }
+      ]).select();
       if (error) {
         console.error('Erro ao adicionar item:', error.message);
         return;
@@ -148,24 +151,40 @@ export class HomePage {
 
   async onToggleTask(task: Item, index: number) {
     if (!task.id) return;
-    // Alterna o status localmente
     const updatedDone = task.done;
     this.tasks[index].done = updatedDone;
-    /**
-    const updatedDone = task.done ? false : true;
-    if (task.done) 
-      this.tasks[index].done = updatedDone;
-    else
-      this.tasks[index].done = updatedDone;
-     */
-    // Move para o fim/início conforme status
     const moved = this.tasks.splice(index, 1)[0];
     if (updatedDone) {
       this.tasks.push(moved);
+      // Adiciona data corrente ao datas_finalizacao ao finalizar
+      const now = new Date().toISOString();
+      // Busca o array atual de datas_finalizacao
+      const { data, error } = await supabase.from('items').select('datas_finalizacao').eq('id', task.id).single();
+      let datasFinalizacao: string[] = Array.isArray(data?.datas_finalizacao) ? data.datas_finalizacao : [];
+      datasFinalizacao.push(now);
+      await supabase.from('items')
+        .update({
+          done: updatedDone,
+          datas_finalizacao: datasFinalizacao
+        })
+        .eq('id', task.id);
+      return;
     } else {
       this.tasks.unshift(moved);
+      // Adiciona data corrente ao datas_inclusao ao desselecionar
+      const now = new Date().toISOString();
+      const { data, error } = await supabase.from('items').select('datas_inclusao').eq('id', task.id).single();
+      let datasInclusao: string[] = Array.isArray(data?.datas_inclusao) ? data.datas_inclusao : [];
+      datasInclusao.push(now);
+      await supabase.from('items')
+        .update({
+          done: updatedDone,
+          datas_inclusao: datasInclusao
+        })
+        .eq('id', task.id);
+      return;
     }
-    // Salva no Supabase de forma assíncrona (não bloqueia a UI)
+    // Atualiza apenas o status se não for desselecionar
     supabase.from('items')
       .update({ done: updatedDone })
       .eq('id', task.id)
