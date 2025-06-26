@@ -10,6 +10,7 @@ interface Item {
   title: string;
   //created_at?: string;
   done: boolean;
+  low_stock?: number;
 }
 
 @Component({

@@ -43,6 +43,10 @@
     <ion-item *ngFor="let task of tasks; let i = index" [ngClass]="{'done': task.done}" (click)="onToggleTask(task, i)">
       <ion-checkbox slot="start" [(ngModel)]="task.done"></ion-checkbox>
       <ion-label>{{ task.title }}</ion-label>
+      <ion-badge *ngIf="task.low_stock !== undefined && task.low_stock < 4" color="danger" slot="end" style="margin-right:8px;">
+        <ion-icon name="alert-circle-outline" style="vertical-align:middle;"></ion-icon>
+          {{ task.low_stock }} dia(s)
+        </ion-badge>
       <ion-button fill="clear" color="danger" slot="end" (click)="removeTask(i); $event.stopPropagation();">
         <ion-icon name="trash-outline"></ion-icon>
       </ion-button>
