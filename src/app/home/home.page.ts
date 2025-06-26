@@ -134,7 +134,7 @@ export class HomePage {
     const now = new Date().toISOString();
     try {
       const { data, error } = await supabase.from('items').insert([
-        { title, done: false, datas_inclusao: [now] }
+        { title, done: false, initial_date: [now] }
       ]).select();
       if (error) {
         console.error('Erro ao adicionar item:', error.message);
@@ -156,30 +156,30 @@ export class HomePage {
     const moved = this.tasks.splice(index, 1)[0];
     if (updatedDone) {
       this.tasks.push(moved);
-      // Adiciona data corrente ao datas_finalizacao ao finalizar
+      // Adiciona data corrente ao final_date ao finalizar
       const now = new Date().toISOString();
-      // Busca o array atual de datas_finalizacao
-      const { data, error } = await supabase.from('items').select('datas_finalizacao').eq('id', task.id).single();
-      let datasFinalizacao: string[] = Array.isArray(data?.datas_finalizacao) ? data.datas_finalizacao : [];
-      datasFinalizacao.push(now);
+      // Busca o array atual de final_date
+      const { data, error } = await supabase.from('items').select('final_date').eq('id', task.id).single();
+      let finalDate: string[] = Array.isArray(data?.final_date) ? data.final_date : [];
+      finalDate.push(now);
       await supabase.from('items')
         .update({
           done: updatedDone,
-          datas_finalizacao: datasFinalizacao
+          final_date: finalDate
         })
         .eq('id', task.id);
       return;
     } else {
       this.tasks.unshift(moved);
-      // Adiciona data corrente ao datas_inclusao ao desselecionar
+      // Adiciona data corrente ao initial_date ao desselecionar
       const now = new Date().toISOString();
-      const { data, error } = await supabase.from('items').select('datas_inclusao').eq('id', task.id).single();
-      let datasInclusao: string[] = Array.isArray(data?.datas_inclusao) ? data.datas_inclusao : [];
-      datasInclusao.push(now);
+      const { data, error } = await supabase.from('items').select('initial_date').eq('id', task.id).single();
+      let initialDate: string[] = Array.isArray(data?.initial_date) ? data.initial_date : [];
+      initialDate.push(now);
       await supabase.from('items')
         .update({
           done: updatedDone,
-          datas_inclusao: datasInclusao
+          initial_date: initialDate
         })
         .eq('id', task.id);
       return;
